@@ -2,31 +2,37 @@ import pandas as pd
 import os
 
 path = r"C:\Users\jerzy\PycharmProjects\projekt_zal\dane2020\20210215_Gminy_2_za_2020.xlsx"
+path2 =  r"C:\Users\jerzy\PycharmProjects\projekt_zal\Ludność.Stan i struktura_31.12.2020\tabela12.xls"
+path3 = r'C:\Users\jerzy\PycharmProjects\projekt_zal\dane2019\20200214_Gminy_za_2019.xlsx'
 
-def gminy2020(sciezka): #gminy2020
-    gm2020 = pd.read_excel(sciezka, usecols = [0, 1, 2, 3, 4, 11], skiprows = [0, 1, 2, 4, 5, 6])
 
-    gm2020 = gm2020.rename({"Dochody wykonane\n(wpłaty minus zwroty)" : 'dochody'}, axis ='columns')
+def filtr(sciezka, jst): #funkcja uniwersalna dla gmin, powiatów - tworzy ramkę potrzebnych danych, twotzy kolumnę z kodem id
+    df = pd.read_excel(sciezka, usecols = [0, 1, 2, 3, 4, 11], skiprows = [0, 1, 2, 4, 5, 6])
+
+    df = df.rename({"Dochody wykonane\n(wpłaty minus zwroty)" : 'dochody'}, axis ='columns')
 
     #tworzymy kolumnę z wlasciwym kodem id
-    gm2020.WK = gm2020.WK.astype(str) #zmiana typu danych na string
-    gm2020['WK'] = gm2020.apply(id, axis=1, column ='WK') #ewentualne dodanie 0
+    df.WK = df.WK.astype(str) #zmiana typu danych na string
+    df['WK'] = df.apply(id, axis=1, column ='WK') #ewentualne dodanie 0
 
-    gm2020.PK = gm2020.PK.astype(str)
-    gm2020['PK'] = gm2020.apply(id, axis=1, column ='PK')
+    df.PK = df.PK.astype(str)
+    df['PK'] = df.apply(id, axis=1, column ='PK')
 
-    gm2020.GK = gm2020.GK.astype(str)
-    gm2020['GK'] = gm2020.apply(id, axis=1, column ='GK')
+    df.GK = df.GK.astype(str)
+    df['GK'] = df.apply(id, axis=1, column ='GK')
 
-    gm2020.GT = gm2020.GT.astype(str)
+    df.GT = df.GT.astype(str)
 
-    #kolumna id
-    gm2020['id'] = gm2020['WK'] + gm2020['PK'] + gm2020['GK'] + gm2020['GT']
+    #kolumna id dla gmin
+    if jst == 'gminy':
+        df['id'] = df['WK'] + df['PK'] + df['GK'] + df['GT']
 
-    gm2020 = gm2020[['id', 'Nazwa JST', 'dochody']]
+    elif jst == 'powiaty':
+        df['id'] = df['WK'] + df['PK']
 
-    return gm2020
+    df = df[['id', 'Nazwa JST', 'dochody']]
 
+    return df
 
 def id(row, column): #funkca dodaje zero przed liczbą jedno-cyfrową, dwucyfrową zostawia bez zmian
     if len(row[column]) == 1:
@@ -37,10 +43,6 @@ def id(row, column): #funkca dodaje zero przed liczbą jedno-cyfrową, dwucyfrow
     return val
 
 
-
-
-path2 =  r"C:\Users\jerzy\PycharmProjects\projekt_zal\Ludność.Stan i struktura_31.12.2020\tabela12.xls"
-
 def ludnosc_gminy(path):
     lg = pd.concat(pd.read_excel(path, sheet_name=None, usecols = [0, 1, 2], skiprows = [0, 1, 2,3, 4, 6,7]), ignore_index=True)
 
@@ -50,26 +52,52 @@ def ludnosc_gminy(path):
 
     return lg
 
+'''def sr_dochod(row, dochod):
+    sr_dochod = row[dochod]/row['populacja']
 
+    return sr_dochod'''
 
+def sr_dochod2(row, dochodJST, udzialJST, prog, odsetek_pracujacych): #średni dochód miaszkańca danej JST administracyjnej
+    '''
+    1. żeby policzyć całość podatku odprowadzanego przez mieszkańców dzielę dochód JST przez procent jej udziału.
+    2. Następnię wartość dzielę przez liczbę mieszkańców odprowadzających podatki (odsetek pracujących wyznaczam arbitralnie)
+    3. Uzyskaną wartość dzielę przez 1 próg podatkowy
+    4. otrzymuję średni ROCZNY dochód mieszkańca danej JST'''
 
-def main():
-    gm2020 = gminy2020(path)
+    sr_dochod = row[dochodJST]/(udzialJST * prog * row['populacja'] * odsetek_pracujacych)
 
+    return sr_dochod
+
+def gminy():
+    gm2020 = filtr(path, 'gminy')
     lg = ludnosc_gminy(path2)
+    gm2019 = filtr(path3, 'gminy')
 
-    gminy = pd.merge(gm2020, lg, how='left', on='id')
+    #łączę tabele dochody 2020 i ludność
+    df = pd.merge(gm2020, lg, how='left', on='id')
+    df = df[['id', 'gmina', 'dochody', 'populacja']]
+    df.columns = ['id', 'gmina', 'dochody 2020', 'populacja']
 
-    print(gminy.head(20))
+    #łączę df i dochody 2019
+    df = pd.merge(df, gm2019, how='left', on='id')
+    df = df[['id', 'gmina', 'dochody', 'dochody 2020', 'populacja']]
+    df.columns = ['id', 'gmina', 'dochody 2019', 'dochody 2020', 'populacja']
 
-    print(gm2020.shape, lg.shape, gminy.shape)
+    #średni dochód
+    #df['średni dochód 2019'] = df.apply(sr_dochod, axis=1, dochod = 'dochody 2019')
+    #df['średni dochód 2020'] = df.apply(sr_dochod, axis=1, dochod = 'dochody 2020')
+    df['średni dochód 2019'] = df.apply(sr_dochod2, axis=1, dochodJST = 'dochody 2019', udzialJST = 0.3816, prog = 0.17, odsetek_pracujacych = 0.7)
+    df['średni dochód 2020'] = df.apply(sr_dochod2, axis=1, dochodJST = 'dochody 2020', udzialJST = 0.3816, prog = 0.17, odsetek_pracujacych = 0.7)
 
-    #print(gm2020.shape, lg.shape)
+    '''df['średni dochód 2019'] = df['średni dochód 2019'].astype(int)
+    df['średni dochód 2020'] = df['średni dochód 2020'].astype(int)'''
 
+    #print(df.head(20))
+    #print(df.dtypes)
 
+    return df
 
-
-main()
+print(gminy())
 
 
 
