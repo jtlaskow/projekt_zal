@@ -1,4 +1,5 @@
 import pandas as pd
+import math
 import os
 
 path = r"C:\Users\jerzy\PycharmProjects\projekt_zal\dane2020\20210215_Gminy_2_za_2020.xlsx"
@@ -30,6 +31,9 @@ def filtr(sciezka, jst): #funkcja uniwersalna dla gmin, powiatów - tworzy ramk�
     elif jst == 'powiaty':
         df['id'] = df['WK'] + df['PK']
 
+    elif jst == 'woj':
+        df['id'] = df['WK']
+
     df = df[['id', 'Nazwa JST', 'dochody']]
 
     return df
@@ -49,6 +53,8 @@ def ludnosc_gminy(path):
     lg.columns = ['gmina', 'id', 'populacja']
 
     lg = lg[lg['id'] != '       ']
+    lg = lg.dropna(axis = 0)  #usuwam wiersze, w których id = NaN
+    lg.id = lg.id.astype(str) #część wartości była int
 
     return lg
 
@@ -57,7 +63,7 @@ def ludnosc_gminy(path):
 
     return sr_dochod'''
 
-def sr_dochod2(row, dochodJST, udzialJST, prog, odsetek_pracujacych): #średni dochód miaszkańca danej JST administracyjnej
+def sr_dochod(row, dochodJST, udzialJST, prog, odsetek_pracujacych): #średni dochód miaszkańca danej JST administracyjnej
     '''
     1. żeby policzyć całość podatku odprowadzanego przez mieszkańców dzielę dochód JST przez procent jej udziału.
     2. Następnię wartość dzielę przez liczbę mieszkańców odprowadzających podatki (odsetek pracujących wyznaczam arbitralnie)
@@ -65,6 +71,7 @@ def sr_dochod2(row, dochodJST, udzialJST, prog, odsetek_pracujacych): #średni d
     4. otrzymuję średni ROCZNY dochód mieszkańca danej JST'''
 
     sr_dochod = row[dochodJST]/(udzialJST * prog * row['populacja'] * odsetek_pracujacych)
+    #sr_dochod = math.floor(sr_dochod)
 
     return sr_dochod
 
@@ -84,21 +91,22 @@ def gminy():
     df.columns = ['id', 'gmina', 'dochody 2019', 'dochody 2020', 'populacja']
 
     #średni dochód
-    #df['średni dochód 2019'] = df.apply(sr_dochod, axis=1, dochod = 'dochody 2019')
-    #df['średni dochód 2020'] = df.apply(sr_dochod, axis=1, dochod = 'dochody 2020')
-    df['średni dochód 2019'] = df.apply(sr_dochod2, axis=1, dochodJST = 'dochody 2019', udzialJST = 0.3816, prog = 0.17, odsetek_pracujacych = 0.7)
-    df['średni dochód 2020'] = df.apply(sr_dochod2, axis=1, dochodJST = 'dochody 2020', udzialJST = 0.3816, prog = 0.17, odsetek_pracujacych = 0.7)
+    df['średni dochód 2019'] = df.apply(sr_dochod, axis=1, dochodJST ='dochody 2019', udzialJST = 0.3816, prog = 0.17, odsetek_pracujacych = 0.7)
+    #df['średni dochód 2019'] = df['średni dochód 2019'].astype(int)
+    df['średni dochód 2020'] = df.apply(sr_dochod, axis=1, dochodJST ='dochody 2020', udzialJST = 0.3816, prog = 0.17, odsetek_pracujacych = 0.7)
+    #df['średni dochód 2020'] = df['średni dochód 2020'].astype(int)
 
-    '''df['średni dochód 2019'] = df['średni dochód 2019'].astype(int)
-    df['średni dochód 2020'] = df['średni dochód 2020'].astype(int)'''
+    df = df.dropna(axis=0) #usuwa kilkanaście wierszy z wartością NaN
 
-    #print(df.head(20))
-    #print(df.dtypes)
+    #chcę zmienić float na int, żeby zaokrąglić do całkowitych, ale się nie udaje
+    df['średni dochód 2019'] = df['średni dochód 2019'].astype(int)
+    df['średni dochód 2020'] = df['średni dochód 2020'].astype(int)
 
     return df
 
-print(gminy())
 
+def main():
+    df = gminy()
+    print(df)
 
-
-
+#main()
