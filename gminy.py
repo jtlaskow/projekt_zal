@@ -41,7 +41,6 @@ def filtr(sciezka, jst): #funkcja uniwersalna dla gmin, powiatów - tworzy ramk�
 def id(row, column): #funkca dodaje zero przed liczbą jedno-cyfrową, dwucyfrową zostawia bez zmian
     if len(row[column]) == 1:
         val = '0' + row[column]
-        #row['WK'] = val
     else:
         val = row[column]
     return val
@@ -57,11 +56,6 @@ def ludnosc_gminy(path):
     lg.id = lg.id.astype(str) #część wartości była int
 
     return lg
-
-'''def sr_dochod(row, dochod):
-    sr_dochod = row[dochod]/row['populacja']
-
-    return sr_dochod'''
 
 def sr_dochod(row, dochodJST, udzialJST, prog, odsetek_pracujacych): #średni dochód miaszkańca danej JST administracyjnej
     '''
@@ -103,10 +97,3 @@ def gminy():
     df['średni dochód 2020'] = df['średni dochód 2020'].astype(int)
 
     return df
-
-
-def main():
-    df = gminy()
-    print(df)
-
-#main()
