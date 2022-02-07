@@ -43,22 +43,14 @@ def powiaty():
     powiaty2 = powiaty2.drop(labels='powiaty', axis=1)
 
     #dodaję kolumny ze średnim dochodem
-    '''powiaty2['średni dochód 2019'] = powiaty2.apply(sr_dochod2, axis=1, dochod = 'dochod 2019')
-    powiaty2['średni dochód 2020'] = powiaty2.apply(sr_dochod2, axis=1, dochod = 'dochod 2020')'''
-
     powiaty2['średni dochód 2019'] = powiaty2.apply(sr_dochod, axis=1, dochodJST ='dochod 2019', udzialJST = 0.1025, prog = 0.17, odsetek_pracujacych = 0.7)
     powiaty2['średni dochód 2020'] = powiaty2.apply(sr_dochod, axis=1, dochodJST ='dochod 2020', udzialJST = 0.1025, prog = 0.17, odsetek_pracujacych = 0.7)
 
     powiaty2['średni dochód 2019'] = powiaty2['średni dochód 2019'].astype(int)
     powiaty2['średni dochód 2020'] = powiaty2['średni dochód 2020'].astype(int)
 
-    '''print (powiaty2.head(20))
-    print(powiaty2.shape)
-    print(powiaty2.dtypes)'''
-
     return powiaty2
 
-#print(powiaty())
 
 
 
