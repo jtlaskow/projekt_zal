@@ -90,3 +90,5 @@ def podrzedne(nadrzedna, podrzedna):
     pod = podrzedna[podrzedna['id2'] == id]
 
     return pod
+
+#trzyyyyy
