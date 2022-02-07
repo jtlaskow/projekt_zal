@@ -1,6 +1,6 @@
 import pandas as pd
 
-from gminy import filtr, sr_dochod2
+from gminy import filtr, sr_dochod
 
 path1 = r'C:\Users\jerzy\PycharmProjects\projekt_zal\dane2019\20200214_Powiaty_za_2019.xlsx'
 path2 = r'C:\Users\jerzy\PycharmProjects\projekt_zal\dane2020\20210211_Powiaty_za_2020.xlsx'
@@ -27,7 +27,7 @@ def id_pw(row): #funkcja poprawia kod terytorialny na właściwy
         val = x
     return val
 
-def main():
+def powiaty():
     pow2019 = filtr(path1, 'powiaty')
     pow2019.columns = ['id', 'powiat', 'dochod 2019']
 
@@ -46,15 +46,19 @@ def main():
     '''powiaty2['średni dochód 2019'] = powiaty2.apply(sr_dochod2, axis=1, dochod = 'dochod 2019')
     powiaty2['średni dochód 2020'] = powiaty2.apply(sr_dochod2, axis=1, dochod = 'dochod 2020')'''
 
-    powiaty2['średni dochód 2019'] = powiaty2.apply(sr_dochod2, axis=1, dochodJST = 'dochod 2019', udzialJST = 0.1025, prog = 0.17, odsetek_pracujacych = 0.7)
-    powiaty2['średni dochód 2020'] = powiaty2.apply(sr_dochod2, axis=1, dochodJST = 'dochod 2020', udzialJST = 0.1025, prog = 0.17, odsetek_pracujacych = 0.7)
+    powiaty2['średni dochód 2019'] = powiaty2.apply(sr_dochod, axis=1, dochodJST ='dochod 2019', udzialJST = 0.1025, prog = 0.17, odsetek_pracujacych = 0.7)
+    powiaty2['średni dochód 2020'] = powiaty2.apply(sr_dochod, axis=1, dochodJST ='dochod 2020', udzialJST = 0.1025, prog = 0.17, odsetek_pracujacych = 0.7)
 
+    powiaty2['średni dochód 2019'] = powiaty2['średni dochód 2019'].astype(int)
+    powiaty2['średni dochód 2020'] = powiaty2['średni dochód 2020'].astype(int)
 
-    print (powiaty2.head(20))
+    '''print (powiaty2.head(20))
     print(powiaty2.shape)
-    print(powiaty2.dtypes)
+    print(powiaty2.dtypes)'''
 
-main()
+    return powiaty2
+
+#print(powiaty())
 
 
 
