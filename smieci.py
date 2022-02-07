@@ -91,4 +91,4 @@ def podrzedne(nadrzedna, podrzedna):
 
     return pod
 
-#trzyyyyy
+#4444444
