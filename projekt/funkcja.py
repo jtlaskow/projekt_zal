@@ -8,4 +8,4 @@ y = '010233'
 
 print(y == x..'')'''
 
-#zmienione
+#zmienione znowu
