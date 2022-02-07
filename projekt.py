@@ -8,17 +8,7 @@ def kod(row): #funkcja skraca kod terytorialny gminy do kodu powiatu
    x = x[:-3]
    return x
 
-'''def wariancja(row, pod, kolumna): #funkcja licząca wariancję średniego dochodu jednostek podległych jednoste nadrzędnej
-    id = row['id'] #kod terytorialny jednostki nadrzędnej
-    podrzedne = pod[pod['id2'] == id] #tabela jednostek podrzędnych
-    podrzedne = podrzedne[kolumna]
-    var = podrzedne.var()
-
-    #możnaby zaokrąglić wynik
-
-    return var'''
-
-def parametr(row, co, pod, kolumna): #funkcja licząca wariancję średniego dochodu jednostek podległych jednoste nadrzędnej
+def parametr(row, co, pod, kolumna): #funkcja licząca wariancję średniego dochodu jednostek podległych jednoste nadrzędnej lub ich średni dochód
     id = row['id'] #kod terytorialny jednostki nadrzędnej
     podrzedne = pod[pod['id2'] == id] #tabela jednostek podrzędnych
 
@@ -26,7 +16,6 @@ def parametr(row, co, pod, kolumna): #funkcja licząca wariancję średniego doc
         dochody = podrzedne[kolumna]
         var = dochody.var()
         return math.floor(var)
-        #możnaby zaokrąglić wynik
 
     elif co == 'srednia wazona':
         #spopulacja podrzednych
@@ -59,25 +48,3 @@ def main():
     powiaty['sr wazona 2020'] = powiaty.apply(parametr, axis =1, co = 'srednia wazona', pod = gminy, kolumna = 'średni dochód 2020')
 
     return powiaty
-
-#print(main())
-
-pow = main()
-print(pow.shape, pow.dtypes)
-print(pow[['wariancja 2019', 'wariancja 2020']])
-
-'''print(pow.iloc[:, [2,4]])
-'''
-'''x = 2
-pow['suma2'] = pow['populacja']*x
-print(pow)'''
-
-
-'''print(pow.shape)
-
-index = pow.index
-wiersze = len(index)
-print(wiersze)'''
-
-
-
