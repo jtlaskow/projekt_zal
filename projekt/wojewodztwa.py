@@ -1,10 +1,6 @@
 from projekt.powiaty import *
 import pandas as pd
 
-wojewodztwa2019 = r'C:\Users\jerzy\PycharmProjects\projekt_zal\dane2019\20200214_Wojewodztwa_za_2019.xlsx'
-wojewodztwa2020 = r'C:\Users\jerzy\PycharmProjects\projekt_zal\dane2020\20210211_Województwa_za_2020.xlsx'
-wojewodztwa_ludnosc = r'C:\Users\jerzy\PycharmProjects\projekt_zal\Ludność.Stan i struktura_31.12.2020\tabela02.xls'
-
 def lud_woj(path):
     lw = pd.read_excel(path, usecols = [0,1], skiprows = [0,1,2,3,4,6,7,8])
     lw.columns = ['wojewodztwo', 'populacja']
@@ -48,13 +44,3 @@ def wojewodztwa(wj2019, wj2020, wj_lud, *args): #(parametry to ścieżki)
         woj2['porównanie 2020'] = woj2['średni dochód 2020']/woj2['sr wazona 2020']
 
     return woj2
-
-#słabo bo, żeby stworzyć tabelę dla wojewodztw trzeba wczesniej stworzyc tabele powiatow, a wczesniej gmin
-#już działa
-'''gm = gminy(gm2019, gm2020, gm_ludnosc)
-pow = powiaty(pow2019, pow2020, pow_ludnosc, gm)
-woj = wojewodztwa(wojewodztwa2019, wojewodztwa2020, wojewodztwa_ludnosc, pow)
-print(woj) #sredni dochód wojewodztw nie do konca sie zgadza z estymowanym przez powiaty
-
-print(woj.shape, woj.dtypes)'''
-

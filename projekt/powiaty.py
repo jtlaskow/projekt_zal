@@ -1,10 +1,6 @@
 from projekt.gminy import *
 import math
 
-pow2019 = r'C:\Users\jerzy\PycharmProjects\projekt_zal\dane2019\20200214_Powiaty_za_2019.xlsx'
-pow2020 = r'C:\Users\jerzy\PycharmProjects\projekt_zal\dane2020\20210211_Powiaty_za_2020.xlsx'
-pow_ludnosc = r'C:\Users\jerzy\PycharmProjects\projekt_zal\Ludność.Stan i struktura_31.12.2020\tabela05.xls'
-
 def lud_powiaty(path):
     lp = pd.read_excel(path, usecols = [0,1,2], skiprows = [0,1,2,3,4,6,7,8,9])
     lp.columns = ['powiaty', 'id', 'populacja']
@@ -97,20 +93,3 @@ def powiaty(powiaty2019, powiaty2020, ludnosc, *args): #(parametry to ścieżki)
         powiaty2['porównanie 2020'] = powiaty2['średni dochód 2020']/powiaty2['sr wazona 2020']
 
     return powiaty2
-
-'''gm = gminy(gm2019, gm2020, gm_ludnosc)
-#print(gm.dtypes)
-pw = powiaty(pow2019, pow2020, pow_ludnosc, gm) #działa z dodadtowym argumentem - tabelą gmin, lub bez niego
-
-print(pw)
-print(pw.shape)
-print(pw.dtypes)
-#print(gm.dtypes) #zostaje niepotrzebna kolumna id2'''
-
-
-
-
-
-
-
-

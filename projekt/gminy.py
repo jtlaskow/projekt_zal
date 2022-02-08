@@ -2,11 +2,6 @@ import pandas as pd
 import math
 import os
 
-gm2020 = r"C:\Users\jerzy\PycharmProjects\projekt_zal\dane2020\20210215_Gminy_2_za_2020.xlsx"
-gm_ludnosc = r"C:\Users\jerzy\PycharmProjects\projekt_zal\Ludność.Stan i struktura_31.12.2020\tabela12.xls"
-gm2019 = r'C:\Users\jerzy\PycharmProjects\projekt_zal\dane2019\20200214_Gminy_za_2019.xlsx'
-
-
 def filtr(sciezka, jst): #funkcja uniwersalna dla gmin, powiatów - tworzy ramkę potrzebnych danych, twotzy kolumnę z kodem id
     df = pd.read_excel(sciezka, usecols = [0, 1, 2, 3, 4, 11], skiprows = [0, 1, 2, 4, 5, 6])
 
