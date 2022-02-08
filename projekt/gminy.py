@@ -89,6 +89,3 @@ def gminy(gminy2019, gminy2020, ludnosc): #funkcja tworzy pełną tabelę dla gm
 
     return df
 
-'''gm = gminy(gm2019, gm2020, gm_ludnosc)
-print(gm)
-print(gm.dtypes, gm.shape)'''
