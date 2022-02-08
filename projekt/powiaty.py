@@ -92,13 +92,23 @@ def powiaty(powiaty2019, powiaty2020, ludnosc, *args): #(parametry to ścieżki)
         powiaty2['sr wazona 2019'] = powiaty2.apply(parametr, axis =1, co = 'srednia wazona', pod = gm, kolumna = 'średni dochód 2019')
         powiaty2['sr wazona 2020'] = powiaty2.apply(parametr, axis =1, co = 'srednia wazona', pod = gm, kolumna = 'średni dochód 2020')
 
+        #wyrzucam niepotrzebną kolumnę, żeby nie zmieniać tabeli gmin
+        #tabela.drop(labels='id2', axis=1)  #nie działa
+
+    #porównanie dochodu średniego z dochodem estymowanym przez gminy
+    powiaty2['porównanie 2019'] = powiaty2['średni dochód 2019']/powiaty2['sr wazona 2019']
+    powiaty2['porównanie 2020'] = powiaty2['średni dochód 2020']/powiaty2['sr wazona 2020']
+
     return powiaty2
 
 '''gm = gminy(gm2019, gm2020, gm_ludnosc)
-pw = powiaty(pow2019, pow2020, pow_ludnosc) #działa z dodadtowym argumentem - tabelą gmin, lub bez niego
+#print(gm.dtypes)
+pw = powiaty(pow2019, pow2020, pow_ludnosc, gm) #działa z dodadtowym argumentem - tabelą gmin, lub bez niego
+
 print(pw)
 print(pw.shape)
-print(pw.dtypes)'''
+print(pw.dtypes)
+#print(gm.dtypes) #zostaje niepotrzebna kolumna id2'''
 
 
 

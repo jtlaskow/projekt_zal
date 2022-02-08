@@ -43,6 +43,10 @@ def wojewodztwa(wj2019, wj2020, wj_lud, *args): #(parametry to ścieżki)
         woj2['sr wazona 2019'] = woj2.apply(parametr, axis =1, co = 'srednia wazona', pod = pw, kolumna = 'średni dochód 2019')
         woj2['sr wazona 2020'] = woj2.apply(parametr, axis =1, co = 'srednia wazona', pod = pw, kolumna = 'średni dochód 2020')
 
+    #porównanie dochodu średniego z dochodem estymowanym przez gminy
+    woj2['porównanie 2019'] = woj2['średni dochód 2019']/woj2['sr wazona 2019']
+    woj2['porównanie 2020'] = woj2['średni dochód 2020']/woj2['sr wazona 2020']
+
     return woj2
 
 #słabo bo, żeby stworzyć tabelę dla wojewodztw trzeba wczesniej stworzyc tabele powiatow, a wczesniej gmin
