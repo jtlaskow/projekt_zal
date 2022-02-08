@@ -59,7 +59,7 @@ def parametr(row, co, pod, kolumna): #funkcja licząca wariancję średniego doc
 
         return math.floor(sr_wazona)
 
-def powiaty(powiaty2019, powiaty2020, ludnosc, gminy): #(parametry to ścieżki)
+def powiaty(powiaty2019, powiaty2020, ludnosc, *args): #(parametry to ścieżki)
     pow2019 = filtr(powiaty2019, 'powiaty')
     pow2019.columns = ['id', 'powiat', 'dochod 2019']
 
@@ -82,23 +82,24 @@ def powiaty(powiaty2019, powiaty2020, ludnosc, gminy): #(parametry to ścieżki)
     powiaty2['średni dochód 2020'] = powiaty2['średni dochód 2020'].astype(int)
 
     #wariancja i dochód ważony gmin
-    gm = gminy
-    gm['id2'] = gm.apply(kod, axis=1)
+    for tabela in args:
+        gm = tabela
+        gm['id2'] = gm.apply(kod, axis=1)
 
-    powiaty2['wariancja 2019'] = powiaty2.apply(parametr, axis =1, co = 'wariancja', pod = gm, kolumna = 'średni dochód 2019')
-    powiaty2['wariancja 2020'] = powiaty2.apply(parametr, axis =1, co = 'wariancja', pod = gm, kolumna = 'średni dochód 2020')
+        powiaty2['wariancja 2019'] = powiaty2.apply(parametr, axis =1, co = 'wariancja', pod = gm, kolumna = 'średni dochód 2019')
+        powiaty2['wariancja 2020'] = powiaty2.apply(parametr, axis =1, co = 'wariancja', pod = gm, kolumna = 'średni dochód 2020')
 
-    powiaty2['sr wazona 2019'] = powiaty2.apply(parametr, axis =1, co = 'srednia wazona', pod = gm, kolumna = 'średni dochód 2019')
-    powiaty2['sr wazona 2020'] = powiaty2.apply(parametr, axis =1, co = 'srednia wazona', pod = gm, kolumna = 'średni dochód 2020')
+        powiaty2['sr wazona 2019'] = powiaty2.apply(parametr, axis =1, co = 'srednia wazona', pod = gm, kolumna = 'średni dochód 2019')
+        powiaty2['sr wazona 2020'] = powiaty2.apply(parametr, axis =1, co = 'srednia wazona', pod = gm, kolumna = 'średni dochód 2020')
 
     return powiaty2
 
 '''gm = gminy(gm2019, gm2020, gm_ludnosc)
-pw = powiaty(pow2019, pow2020, pow_ludnosc, gm)
+pw = powiaty(pow2019, pow2020, pow_ludnosc) #działa z dodadtowym argumentem - tabelą gmin, lub bez niego
 print(pw)
 print(pw.shape)
-print(pw.dtypes)
-'''
+print(pw.dtypes)'''
+
 
 
 

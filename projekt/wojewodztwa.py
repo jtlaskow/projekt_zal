@@ -12,7 +12,7 @@ def lud_woj(path):
 
     return lw
 
-def wojewodztwa(wj2019, wj2020, wj_lud, powiaty): #(parametry to ścieżki)
+def wojewodztwa(wj2019, wj2020, wj_lud, *args): #(parametry to ścieżki)
     woj2019 = filtr(wj2019, 'woj')
     woj2019.columns = ['id', 'wojewodztwo', 'dochod 2019']
 
@@ -33,20 +33,24 @@ def wojewodztwa(wj2019, wj2020, wj_lud, powiaty): #(parametry to ścieżki)
     woj2['średni dochód 2020'] = woj2['średni dochód 2020'].astype(int)
 
     #wariancja i średni dochód
-    pw = powiaty
-    pw['id2'] = pw.apply(kod, axis=1)
+    for tab in args: #dodatkowy argument - dzięki temu powstaje tabela z dodatkowymi kolumnami lub bez nich
+        pw = tab
+        pw['id2'] = pw.apply(kod, axis=1)
 
-    woj2['wariancja 2019'] = woj2.apply(parametr, axis =1, co = 'wariancja', pod = powiaty, kolumna = 'średni dochód 2019')
-    woj2['wariancja 2020'] = woj2.apply(parametr, axis =1, co = 'wariancja', pod = powiaty, kolumna = 'średni dochód 2020')
+        woj2['wariancja 2019'] = woj2.apply(parametr, axis =1, co = 'wariancja', pod = pw, kolumna = 'średni dochód 2019')
+        woj2['wariancja 2020'] = woj2.apply(parametr, axis =1, co = 'wariancja', pod = pw, kolumna = 'średni dochód 2020')
 
-    woj2['sr wazona 2019'] = woj2.apply(parametr, axis =1, co = 'srednia wazona', pod = powiaty, kolumna = 'średni dochód 2019')
-    woj2['sr wazona 2020'] = woj2.apply(parametr, axis =1, co = 'srednia wazona', pod = powiaty, kolumna = 'średni dochód 2020')
+        woj2['sr wazona 2019'] = woj2.apply(parametr, axis =1, co = 'srednia wazona', pod = pw, kolumna = 'średni dochód 2019')
+        woj2['sr wazona 2020'] = woj2.apply(parametr, axis =1, co = 'srednia wazona', pod = pw, kolumna = 'średni dochód 2020')
 
     return woj2
 
 #słabo bo, żeby stworzyć tabelę dla wojewodztw trzeba wczesniej stworzyc tabele powiatow, a wczesniej gmin
-gm = gminy(gm2019, gm2020, gm_ludnosc)
+#już działa
+'''gm = gminy(gm2019, gm2020, gm_ludnosc)
 pow = powiaty(pow2019, pow2020, pow_ludnosc, gm)
 woj = wojewodztwa(wojewodztwa2019, wojewodztwa2020, wojewodztwa_ludnosc, pow)
-print(woj)
-print(woj.shape, woj.dtypes)
+print(woj) #sredni dochód wojewodztw nie do konca sie zgadza z estymowanym przez powiaty
+
+print(woj.shape, woj.dtypes)'''
+
