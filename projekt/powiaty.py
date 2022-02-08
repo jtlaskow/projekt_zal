@@ -92,12 +92,9 @@ def powiaty(powiaty2019, powiaty2020, ludnosc, *args): #(parametry to ścieżki)
         powiaty2['sr wazona 2019'] = powiaty2.apply(parametr, axis =1, co = 'srednia wazona', pod = gm, kolumna = 'średni dochód 2019')
         powiaty2['sr wazona 2020'] = powiaty2.apply(parametr, axis =1, co = 'srednia wazona', pod = gm, kolumna = 'średni dochód 2020')
 
-        #wyrzucam niepotrzebną kolumnę, żeby nie zmieniać tabeli gmin
-        #tabela.drop(labels='id2', axis=1)  #nie działa
-
-    #porównanie dochodu średniego z dochodem estymowanym przez gminy
-    powiaty2['porównanie 2019'] = powiaty2['średni dochód 2019']/powiaty2['sr wazona 2019']
-    powiaty2['porównanie 2020'] = powiaty2['średni dochód 2020']/powiaty2['sr wazona 2020']
+        #porównanie dochodu średniego z dochodem estymowanym przez gminy
+        powiaty2['porównanie 2019'] = powiaty2['średni dochód 2019']/powiaty2['sr wazona 2019']
+        powiaty2['porównanie 2020'] = powiaty2['średni dochód 2020']/powiaty2['sr wazona 2020']
 
     return powiaty2
 
