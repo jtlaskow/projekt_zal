@@ -1,1 +1,1 @@
-gotowy projekt znajduje się w folderze projekt. Pliki poza nim są nieważne.
+gotowy projekt znajduje się w pakiecie projekt. Pliki poza nim są nieważne.
